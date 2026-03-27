@@ -1,12 +1,12 @@
 import javax.swing.*;
 import java.awt.*;
-import java.util.Set;
+import java.awt.event.*;
+import java.util.Map;
 
 public class SiteBlocker extends JFrame {
 
     private final SiteBlockerPanel panel;
     private final HostsManager     hostsManager;
-
 
     public SiteBlocker() {
         super("Site Blocker");
@@ -24,6 +24,16 @@ public class SiteBlocker extends JFrame {
         // Eylem bağlama
         panel.setOnAdd(this::addSite);
         panel.setOnRemove(this::removeSite);
+
+        // Çift tıklama → redirect IP düzenleme dialogu
+        panel.getTable().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() == 2) {
+                    editRedirect();
+                }
+            }
+        });
 
         setContentPane(panel);
 
@@ -55,7 +65,7 @@ public class SiteBlocker extends JFrame {
 
         try {
             hostsManager.blockSite(site);
-            panel.addRow(site);
+            panel.addRow(site, HostsManager.REDIRECT_IP);
             panel.clearInput();
             panel.setStatus("✔ " + site + " engellendi.", Theme.GREEN);
         } catch (Exception ex) {
@@ -80,10 +90,34 @@ public class SiteBlocker extends JFrame {
         }
     }
 
+    private void editRedirect() {
+        int row = panel.getTable().getSelectedRow();
+        if (row < 0) return;
+
+        String site      = panel.getSelectedSite();
+        String currentIp = panel.getTable().getValueAt(row, 2).toString();
+
+        RedirectEditDialog dialog = new RedirectEditDialog(this, site, currentIp);
+        dialog.setVisible(true); // modal — burası kapanana kadar bloklar
+
+        String newIp = dialog.getResult();
+        if (newIp == null) return; // kullanıcı iptal etti
+
+        try {
+            hostsManager.changeRedirectIp(site, newIp);
+            panel.updateRowIp(row, newIp);
+            panel.setStatus("✔ " + site + " → " + newIp + " olarak güncellendi.", Theme.GREEN);
+        } catch (Exception ex) {
+            panel.setStatus("✖ Hata: " + ex.getMessage(), Theme.RED);
+        }
+    }
+
     private void loadBlockedSites() {
         try {
-            Set<String> sites = hostsManager.loadBlockedSites();
-            for (String s : sites) panel.addRow(s);
+            Map<String, String> sites = hostsManager.loadBlockedSites();
+            for (Map.Entry<String, String> entry : sites.entrySet()) {
+                panel.addRow(entry.getKey(), entry.getValue());
+            }
             if (!sites.isEmpty()) {
                 panel.setStatus(sites.size() + " engellenen site yüklendi.", Theme.GREEN);
             }

@@ -3,21 +3,13 @@ import javax.swing.table.*;
 import java.awt.*;
 import java.util.Objects;
 
-/**
- * SiteBlocker uygulamasının tüm görsel bileşenlerini içeren panel.
- * Mantık (hosts okuma/yazma) SiteBlocker üzerinden HostsManager'a delege edilir.
- */
 public class SiteBlockerPanel extends JPanel {
 
-    // -------------------------------------------------------------------
-    // Bileşenler
-    // -------------------------------------------------------------------
     private final DefaultTableModel tableModel;
     private final JTable            table;
     private final JTextField        siteInput;
     private final JLabel            statusLabel;
 
-    // Eylemler SiteBlocker tarafından enjekte edilir
     private Runnable onAdd;
     private Runnable onRemove;
 
@@ -25,43 +17,41 @@ public class SiteBlockerPanel extends JPanel {
         setBackground(Theme.BG);
         setLayout(new BorderLayout(0, 0));
 
-        // Tablo modeli
         String[] cols = {"#", "Engellenen Site", "Yönlendirme", "Durum"};
         tableModel = new DefaultTableModel(cols, 0) {
             @Override public boolean isCellEditable(int r, int c) { return false; }
         };
         table = buildTable();
 
-        // Durum etiketi (buildBottom'da kullanılır, önce oluştur)
         statusLabel = new JLabel("Hazır.");
         statusLabel.setFont(new Font("Segoe UI", Font.PLAIN, 12));
         statusLabel.setForeground(Theme.TEXT_SUB);
 
-        // Giriş alanı
         siteInput = buildInput();
 
-        add(buildTopBar(),    BorderLayout.NORTH);
+        add(buildTopBar(),     BorderLayout.NORTH);
         add(buildScrollPane(), BorderLayout.CENTER);
-        add(buildBottom(),    BorderLayout.SOUTH);
+        add(buildBottom(),     BorderLayout.SOUTH);
     }
 
-    // -------------------------------------------------------------------
-    // Eylem bağlama (SiteBlocker çağırır)
-    // -------------------------------------------------------------------
     public void setOnAdd(Runnable r)    { this.onAdd    = r; }
     public void setOnRemove(Runnable r) { this.onRemove = r; }
 
-    // -------------------------------------------------------------------
-    // Tablo işlemleri (SiteBlocker kullanır)
-    // -------------------------------------------------------------------
+    public JTable getTable() { return table; }
 
-    /** Tabloya yeni satır ekler. */
     public void addRow(String site) {
-        int row = tableModel.getRowCount() + 1;
-        tableModel.addRow(new Object[]{row, site, HostsManager.REDIRECT_IP, "✔ Aktif"});
+        addRow(site, HostsManager.REDIRECT_IP);
     }
 
-    /** Seçili satırı tablodan kaldırır ve numaralandırmayı düzeltir. */
+    public void addRow(String site, String ip) {
+        int row = tableModel.getRowCount() + 1;
+        tableModel.addRow(new Object[]{row, site, ip, "✔ Aktif"});
+    }
+
+    public void updateRowIp(int row, String newIp) {
+        tableModel.setValueAt(newIp, row, 2);
+    }
+
     public void removeSelectedRow() {
         int selected = table.getSelectedRow();
         if (selected < 0) return;
@@ -71,14 +61,12 @@ public class SiteBlockerPanel extends JPanel {
         }
     }
 
-    /** Seçili satırın site adını döner; seçim yoksa null. */
     public String getSelectedSite() {
         int selected = table.getSelectedRow();
         if (selected < 0) return null;
         return tableModel.getValueAt(selected, 1).toString();
     }
 
-    /** Tabloda aynı site var mı? */
     public boolean containsSite(String site) {
         for (int i = 0; i < tableModel.getRowCount(); i++) {
             if (tableModel.getValueAt(i, 1).toString().equals(site)) return true;
@@ -86,23 +74,13 @@ public class SiteBlockerPanel extends JPanel {
         return false;
     }
 
-    // -------------------------------------------------------------------
-    // Input erişimi
-    // -------------------------------------------------------------------
-    public String getInputText()          { return siteInput.getText().trim().toLowerCase(); }
-    public void   clearInput()            { siteInput.setText(""); }
+    public String getInputText() { return siteInput.getText().trim().toLowerCase(); }
+    public void   clearInput()   { siteInput.setText(""); }
 
-    // -------------------------------------------------------------------
-    // Durum çubuğu
-    // -------------------------------------------------------------------
     public void setStatus(String msg, Color color) {
         statusLabel.setText(msg);
         statusLabel.setForeground(color);
     }
-
-    // -------------------------------------------------------------------
-    // UI inşa yardımcıları (private)
-    // -------------------------------------------------------------------
 
     private JPanel buildTopBar() {
         JPanel topBar = new JPanel(new BorderLayout());
@@ -195,7 +173,6 @@ public class SiteBlockerPanel extends JPanel {
         bottom.setLayout(new BoxLayout(bottom, BoxLayout.Y_AXIS));
         bottom.setBorder(BorderFactory.createEmptyBorder(10, 14, 14, 14));
 
-        // --- Giriş satırı ---
         JPanel inputRow = new JPanel(new BorderLayout(8, 0));
         inputRow.setBackground(Theme.BG);
 
@@ -215,7 +192,6 @@ public class SiteBlockerPanel extends JPanel {
         inputRow.add(siteInput, BorderLayout.CENTER);
         inputRow.add(btnGroup,  BorderLayout.EAST);
 
-        // --- Durum satırı ---
         JPanel statusRow = new JPanel(new BorderLayout());
         statusRow.setBackground(Theme.BG);
         statusRow.setBorder(BorderFactory.createEmptyBorder(8, 2, 0, 2));
