@@ -10,9 +10,9 @@ public class SiteBlocker extends JFrame {
     public SiteBlocker() {
         super("Site Blocker");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(680, 500);
+        setSize(500, 500);
         setLocationRelativeTo(null);
-        setResizable(false);
+        setResizable(true);
 
         hostsManager = new HostsManager();
         panel        = new SiteBlockerPanel();
