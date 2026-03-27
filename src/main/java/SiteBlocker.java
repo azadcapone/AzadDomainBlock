@@ -7,12 +7,16 @@ public class SiteBlocker extends JFrame {
     private final SiteBlockerPanel panel;
     private final HostsManager     hostsManager;
 
+
     public SiteBlocker() {
         super("Site Blocker");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(500, 500);
-        setLocationRelativeTo(null);
-        setResizable(true);
+        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        this.setSize(500, 500);
+        this.setLocationRelativeTo(null);
+        this.setResizable(true);
+        this.setIconImage(
+                new ImageIcon(getClass().getResource("/logo.png")).getImage()
+        );
 
         hostsManager = new HostsManager();
         panel        = new SiteBlockerPanel();
