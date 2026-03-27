@@ -20,7 +20,7 @@ public class SiteBlocker extends JFrame {
     private JLabel statusLabel;
 
     public SiteBlocker() {
-        setTitle("🛡️ Site Blocker");
+        setTitle("Site Blocker");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(680, 500);
         setLocationRelativeTo(null);
@@ -51,7 +51,7 @@ public class SiteBlocker extends JFrame {
         topBar.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, accent));
         topBar.setPreferredSize(new Dimension(680, 60));
 
-        JLabel title = new JLabel("  🛡 Site Blocker");
+        JLabel title = new JLabel("  Site Engelleyici");
         title.setFont(new Font("Segoe UI", Font.BOLD, 20));
         title.setForeground(textMain);
 
@@ -209,7 +209,7 @@ public class SiteBlocker extends JFrame {
         // Check duplicate in table
         for (int i = 0; i < tableModel.getRowCount(); i++) {
             if (tableModel.getValueAt(i, 1).toString().equals(raw)) {
-                setStatus("⚠ Bu site zaten engellenmiş.", Color.ORANGE);
+                setStatus("! Bu site zaten engellenmiş.", Color.ORANGE);
                 return;
             }
         }
@@ -230,7 +230,7 @@ public class SiteBlocker extends JFrame {
     private void removeSite() {
         int selected = table.getSelectedRow();
         if (selected < 0) {
-            setStatus("⚠ Lütfen listeden bir site seçin.", Color.ORANGE);
+            setStatus("! Lütfen listeden bir site seçin.", Color.ORANGE);
             return;
         }
         String site = tableModel.getValueAt(selected, 1).toString();
@@ -288,7 +288,7 @@ public class SiteBlocker extends JFrame {
             }
             if (!seen.isEmpty()) setStatus(seen.size() + " engellenen site yüklendi.", new Color(80, 200, 120));
         } catch (Exception ex) {
-            setStatus("⚠ hosts dosyası okunamadı: " + ex.getMessage(), Color.ORANGE);
+            setStatus("!!!!hosts dosyası okunamadı!!!!: " + ex.getMessage(), Color.ORANGE);
         }
     }
 
