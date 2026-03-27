@@ -183,7 +183,7 @@ public class SiteBlockerPanel extends JPanel {
         tf.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(Theme.BORDER, 1),
                 BorderFactory.createEmptyBorder(6, 10, 6, 10)));
-        tf.putClientProperty("JTextField.placeholderText", "örn: facebook.com");
+        tf.putClientProperty("JTextField.placeholderText", "örn: tiktok.com");
         tf.addActionListener(e -> { if (onAdd != null) onAdd.run(); });
         return tf;
     }

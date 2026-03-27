@@ -1,6 +1,12 @@
 import javax.swing.*;
 import java.io.FileOutputStream;
+
+/**
+ * Uygulama giriş noktası.
+ * Admin yetkisi kontrolü ve gerekirse UAC ile yeniden başlatma burada yapılır.
+ */
 public class Main {
+
     public static void main(String[] args) {
         if (!isAdmin()) {
             try {
@@ -16,19 +22,13 @@ public class Main {
         }
 
         // Admin olarak çalışıyor — UI başlat
-        try {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (Exception ignored) {}
+        Theme.setup();
 
         SwingUtilities.invokeLater(() -> new SiteBlocker().setVisible(true));
     }
 
-    // -------------------------------------------------------------------
-    // Admin kontrolü
-    // -------------------------------------------------------------------
-
     /**
-     * hosts dosyasına yazma erişimi deneyerek yönetici yetkisi olup olmadığını sınar.
+     * hosts dosyasına rw erişimi deneyerek yönetici yetkisi olup olmadığını sınar.
      */
     private static boolean isAdmin() {
         try {
@@ -39,9 +39,6 @@ public class Main {
         }
     }
 
-    // -------------------------------------------------------------------
-    // UAC ile yeniden başlatma
-    // -------------------------------------------------------------------
 
     /**
      * Uygulamayı PowerShell aracılığıyla UAC (Yönetici olarak çalıştır) ile yeniden başlatır.
