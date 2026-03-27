@@ -42,10 +42,8 @@ public class Theme {
         customizeFlatLaf();
     }
 
-    // -------------------------------------------------------------------
-    // FlatLaf renk override'ları
-    // -------------------------------------------------------------------
 
+    // FlatLaf renk override'ları
     private static void customizeFlatLaf() {
         // Genel
         UIManager.put("Panel.background",              BG);
@@ -97,7 +95,7 @@ public class Theme {
     }
 
     // -------------------------------------------------------------------
-    // Fabrika — paintComponent override YOK, FlatLaf render eder
+    // Fabrika
     // -------------------------------------------------------------------
 
     public static JButton makeButton(String text, Color bg, Color fg) {
@@ -106,7 +104,7 @@ public class Theme {
         btn.setBackground(bg);
         btn.setForeground(fg);
         btn.setFocusPainted(false);
-        btn.putClientProperty("JButton.buttonType", "roundRect"); // FlatLaf yuvarlak köşe
+        btn.putClientProperty("JButton.buttonType", "roundRect"); // YUVARLAK KÖŞE
         btn.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         return btn;
     }

@@ -12,10 +12,6 @@ public class HostsManager {
     public static final String REDIRECT_IP  = "127.0.0.1";
     public static final String BLOCK_TAG    = "# [SiteBlocker]";
 
-    // -------------------------------------------------------------------
-    // Okuma
-    // -------------------------------------------------------------------
-
     /**
      * hosts dosyasından SiteBlocker tarafından engellenen siteleri okur.
      * www. öneki çıkarılmış, tekil, sıralı bir küme döner.
@@ -36,9 +32,7 @@ public class HostsManager {
         return seen;
     }
 
-    // -------------------------------------------------------------------
-    // Yazma
-    // -------------------------------------------------------------------
+
 
 
     // Verilen siteyi hosts dosyasına ekler (hem "site" hem "www.site" için).
