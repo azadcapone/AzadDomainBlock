@@ -53,11 +53,11 @@ public class RedirectEditDialog extends JDialog {
             ipField.selectAll();
         });
 
-        JPanel suggestions = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 0));
+        JPanel suggestions = new JPanel(new FlowLayout(FlowLayout.LEFT, 6, 6));
         suggestions.setBackground(Theme.BG);
         suggestions.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-        String[] presets = {"127.0.0.1", "0.0.0.0", "::1"};
+        String[] presets = {"127.0.0.1", "0.0.0.0", "::1", "https://www.youtube.com/watch?v=dQw4w9WgXcQ"};
         for (String ip : presets) {
             JButton btn = Theme.makeButton(ip, Theme.BTN_MUTED, Theme.TEXT_SUB);
             btn.setFont(new Font("Segoe UI Mono", Font.PLAIN, 11));
